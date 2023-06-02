@@ -1,0 +1,25 @@
+#primeira camada
+FROM golang:1.7.3-alpine AS builder
+
+WORKDIR /usr/src/app 
+
+COPY . .
+
+# COPY go.mod go.sum ./
+# RUN go mod download && go mod verify
+# pega package main para rodar a especificação
+RUN go build -o desafioGo
+# -o output pesquisar outras flags que pode diminuir ainda mais a imagens
+
+# FROM golang:1.20-alpine3.18
+#segunda camada
+#tenta utilizar a menor image no dockerhub
+FROM scratch 
+# empty image ajuda na diminuição 
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/ .
+
+CMD [ "./desafioGo" ]
+
